@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基于年报文本挖掘的企业数字化转型测度研究 · 预演毕业论文</title>
+<style>
+  :root { --ink:#1a2233; --sub:#5a6478; --line:#e3e7ee; --brand:#2b5bd7; --bg:#f7f8fa; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); background:var(--bg); line-height:1.85; }
+  header { background:#fff; border-bottom:1px solid var(--line); padding:28px 16px 20px; text-align:center; }
+  header h1 { font-size:22px; margin:0 0 8px; }
+  header p { color:var(--sub); font-size:13px; margin:4px 0; }
+  header a { color:var(--brand); text-decoration:none; }
+  main { max-width:900px; margin:24px auto 60px; background:#fff; border:1px solid var(--line); border-radius:10px; padding:48px 56px; }
+  article h1 { font-size:24px; border-bottom:2px solid var(--brand); padding-bottom:10px; }
+  article h2 { font-size:20px; margin-top:2.2em; border-left:4px solid var(--brand); padding-left:12px; }
+  article h3 { font-size:17px; margin-top:1.8em; }
+  article table { border-collapse:collapse; width:100%; margin:14px 0; font-size:14px; }
+  article th, article td { border:1px solid var(--line); padding:7px 10px; text-align:center; }
+  article th { background:#f0f3f8; }
+  article blockquote { margin:14px 0; padding:10px 16px; background:#f4f7ff; border-left:4px solid var(--brand); color:#3c465c; font-size:14px; }
+  article code, article pre { font-family:Consolas,Menlo,monospace; font-size:13px; background:#f5f6f8; border-radius:4px; }
+  article code { padding:2px 5px; }
+  article pre { padding:14px; overflow-x:auto; border:1px solid var(--line); }
+  article hr { border:none; border-top:1px solid var(--line); margin:32px 0; }
+  .loading { text-align:center; color:var(--sub); padding:80px 0; }
+  footer { text-align:center; color:var(--sub); font-size:12px; padding:20px; }
+  @media (max-width:640px){ main{ padding:24px 18px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>基于年报文本挖掘的企业数字化转型测度研究</h1>
+  <p>—— 兼论数字化转型对企业绩效的影响 ——</p>
+  <p>NLP 测度构建方法 · 预演毕业论文（模拟稿） ｜ <a href="https://github.com/" id="gh-link">GitHub 仓库</a> ｜ 论文全文在线阅读</p>
+</header>
+<main><div id="content" class="loading">正在加载论文全文…</div></main>
+<footer>预演毕业论文 · 五步 NLP 测度构建流水线 · 全部结果由随仓库开源代码自动生成，可一键复现</footer>
+<script>
+/* 自包含 Markdown 渲染器（标题/表格/加粗/引用/列表/代码块/分隔线），无 CDN 依赖 */
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function inline(s){
+  s = esc(s);
+  s = s.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+  s = s.replace(/\*(.+?)\*/g,"<em>$1</em>");
+  s = s.replace(/`([^`]+)`/g,"<code>$1</code>");
+  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank">$1</a>');
+  return s;
+}
+function render(md){
+  const lines = md.split("\n");
+  let html = [], i = 0, inUl = false;
+  const closeUl = ()=>{ if(inUl){ html.push("</ul>"); inUl=false; } };
+  while(i < lines.length){
+    let ln = lines[i].replace(/\s+$/,"");
+    if(ln.startsWith("```")){
+      closeUl(); let buf=[]; i++;
+      while(i<lines.length && !lines[i].startsWith("```")){ buf.push(lines[i]); i++; }
+      html.push("<pre><code>"+esc(buf.join("\n"))+"</code></pre>"); i++; continue;
+    }
+    if(/^\s*\|/.test(ln)){
+      closeUl(); let rows=[];
+      while(i<lines.length && /^\s*\|/.test(lines[i])){
+        const cells = lines[i].trim().replace(/^\||\|$/g,"").split("|").map(c=>c.trim());
+        if(!cells.every(c=>/^:?-{2,}:?$/.test(c))) rows.push(cells);
+        i++;
+      }
+      if(rows.length){
+        let t="<table><thead><tr>"+rows[0].map(c=>"<th>"+inline(c)+"</th>").join("")+"</tr></thead><tbody>";
+        for(let r=1;r<rows.length;r++) t+="<tr>"+rows[r].map(c=>"<td>"+inline(c)+"</td>").join("")+"</tr>";
+        html.push(t+"</tbody></table>");
+      }
+      continue;
+    }
+    const h = ln.match(/^(#{1,4})\s+(.*)/);
+    if(h){ closeUl(); const lv=Math.min(h[1].length+ (h[1].length===1?0:0),4); html.push("<h"+lv+">"+inline(h[2])+"</h"+lv+">"); i++; continue; }
+    if(/^(-{3,}|\*{3,})\s*$/.test(ln)){ closeUl(); html.push("<hr>"); i++; continue; }
+    if(ln.startsWith(">")){ closeUl(); let buf=[];
+      while(i<lines.length && lines[i].startsWith(">")){ buf.push(lines[i].replace(/^>\s?/,"")); i++; }
+      html.push("<blockquote>"+buf.map(x=>inline(x)).join("<br>")+"</blockquote>"); continue; }
+    if(/^\s*[-*]\s+/.test(ln)){
+      if(!inUl){ html.push("<ul>"); inUl=true; }
+      html.push("<li>"+inline(ln.replace(/^\s*[-*]\s+/,""))+"</li>"); i++; continue;
+    }
+    if(ln.trim()===""){ closeUl(); i++; continue; }
+    closeUl(); html.push("<p>"+inline(ln)+"</p>"); i++;
+  }
+  closeUl();
+  return html.join("\n");
+}
+fetch("thesis/paper.md").then(r=>{ if(!r.ok) throw 0; return r.text(); })
+  .then(md=>{ document.getElementById("content").className=""; document.getElementById("content").innerHTML = render(md); window.__md=md; })
+  .catch(()=>{ document.getElementById("content").innerHTML =
+    "<p>正文加载失败。请直接访问原始文件：<a href='thesis/paper.md'>thesis/paper.md</a> ｜ <a href='results/summary.md'>results/summary.md</a></p>"; });
+</script>
+</body>
+</html>
